@@ -6,15 +6,15 @@ import { Publicaciones } from '../Schema/publicaciones.model';
 export class PublicacionesService {
     constructor(
         @InjectModel(Publicaciones)
-        private PublicacionModel: typeof Publicaciones,
+        private publicacionModel: typeof Publicaciones,
     ) { }
 
     async findAll(): Promise<Publicaciones[]> {
-        return this.PublicacionModel.findAll();
+        return this.publicacionModel.findAll();
     }
 
     findOne(id: string): Promise<Publicaciones> {
-        return this.PublicacionModel.findOne({
+        return this.publicacionModel.findOne({
             where: {
                 id,
             },
