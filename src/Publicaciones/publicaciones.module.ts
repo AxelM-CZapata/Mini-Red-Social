@@ -8,5 +8,5 @@ import { SequelizeModule } from '@nestjs/sequelize';
   imports: [SequelizeModule.forFeature([Publicaciones])],
   controllers: [PublicacionesController],
   providers: [PublicacionesService]
-})
+  })
 export class PublicacionesModule { }
