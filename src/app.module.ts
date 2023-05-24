@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Publicaciones } from './Schema/publicaciones.model';
+import { Publicaciones } from './Publicaciones/Entity/publicaciones.entity';
 import { PublicacionesModule } from './Publicaciones/publicaciones.module';
 import { config } from 'dotenv';
 config();

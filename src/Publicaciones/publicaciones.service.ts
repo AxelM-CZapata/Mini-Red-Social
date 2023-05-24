@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Publicaciones } from '../Schema/publicaciones.model';
+import { Publicaciones } from './Entity/publicaciones.entity';
 
 @Injectable()
 export class PublicacionesService {
