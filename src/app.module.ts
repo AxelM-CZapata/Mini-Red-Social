@@ -1,30 +1,22 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Publicaciones } from './Module/Schema/publicaciones.model';
-import { config } from 'dotenv';
-import { PublicacionesModule } from './Module/Publicaciones/publicaciones.module';
-config();
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
 
 @Module({
-  imports: [
-  SequelizeModule.forRoot({
-    dialect: 'postgres',
-    host: DB_HOST,
-    port: parseInt(DB_PORT),
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
-    models: [Publicaciones],
-    synchronize: true,
-    autoLoadModels: true
-    }), PublicacionesModule
-  ],
+  imports: [DatabaseModule, ConfigModule.forRoot({
+    isGlobal: true
+    })],
   controllers: [AppController],
   providers: [AppService],
   })
 
-export class AppModule { }
+export class AppModule {
+  static port: number;
+
+  constructor(private readonly configureService: ConfigService) {
+    AppModule.port = parseInt(configureService.get('SERVER_PORT'));
+  }
+}
