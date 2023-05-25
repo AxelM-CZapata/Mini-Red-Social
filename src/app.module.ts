@@ -3,12 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PublicacionesModule } from './publicaciones/publicaciones.module';
 
 
 @Module({
   imports: [DatabaseModule, ConfigModule.forRoot({
     isGlobal: true
-    })],
+    }), PublicacionesModule],
   controllers: [AppController],
   providers: [AppService],
   })
