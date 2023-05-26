@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Publicacion } from './entity/publicaciones.entity';
 import { Imagen } from './entity/imagen.entity';
+import { CreatePostDto } from './dto/create-publicacion.dto';
 
 @Injectable()
 export class PublicacionesService {
@@ -15,6 +16,7 @@ export class PublicacionesService {
     const publicaciones = await this.publicacionesProviders.findAll({
       include: [Imagen], // Incluye la relación con la tabla de imágenes
     });
+    
     const flatImagenes = [];
     for (const publicacion of publicaciones) {
       const { id, title, body, imagenes, createdAt, updatedAt } = publicacion;
@@ -24,7 +26,7 @@ export class PublicacionesService {
     return flatImagenes;
   }
 
-  async create(body, imagenes): Promise<string> {
+  async create(body: CreatePostDto, imagenes: Express.Multer.File[]): Promise<string> {
     const post = await this.publicacionesProviders.create({ ...body, isActive: true });
     const publicacion = await this.publicacionesProviders.findByPk(post.id);
     if (publicacion) {
