@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Publicacion } from './entity/publicaciones.entity';
 import { Imagen } from './entity/imagen.entity';
 import { CreatePostDto } from './dto/create-publicacion.dto';
-
+import * as path from 'path';
 @Injectable()
 export class PublicacionesService {
   constructor(
@@ -29,11 +29,12 @@ export class PublicacionesService {
   async create(body: CreatePostDto, imagenes: Express.Multer.File[]): Promise<string> {
     const post = await this.publicacionesProviders.create({ ...body, isActive: true });
     const publicacion = await this.publicacionesProviders.findByPk(post.id);
+    const rutaCompleta = path.resolve('uploads');
     if (publicacion) {
       if (imagenes) {
         const imagenesPromises = imagenes.map(async (imagen) => {
           await this.imagenesProviders.create({
-            url: imagen.filename,
+            url: rutaCompleta + '\\' + imagen.filename,
             publicacionId: publicacion.id,
           });
         });
