@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Publicacion } from './entity/publicaciones.entity';
 import { Imagen } from './entity/imagen.entity';
 import { CreatePostDto } from './dto/create-publicacion.dto';
-import * as path from 'path';
 
 @Injectable()
 export class PublicacionesService {
@@ -34,7 +33,7 @@ export class PublicacionesService {
       if (imagenes) {
         const imagenesPromises = imagenes.map(async (imagen) => {
           await this.imagenesProviders.create({
-            url: `${imagen.path}`,
+            url: `${imagen.destination}/${imagen.filename}`,
             publicacionId: publicacion.id,
           });
         });
