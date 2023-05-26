@@ -11,6 +11,11 @@ export class UsersService {
     private readonly configureService: ConfigService,
   ) {}
 
+  async createUser(createUserDto: CreateUserDto) {
+    const newUser = await this.serviceUsers.create({ createUserDto });
+    return newUser;
+  }
+  
   async findAll(): Promise<Usuarios[]> {
     const api = this.configureService.get('DB_HOST');
     console.log(api);
@@ -26,8 +31,4 @@ export class UsersService {
     await usuario.destroy();
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const newUser = await this.serviceUsers.create(createUserDto);
-    return newUser;
-  }
 }
