@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Publicacion } from './entity/publicaciones.entity';
 import { Imagen } from './entity/imagen.entity';
 import { CreatePostDto } from './dto/create-publicacion.dto';
+import * as path from 'path';
 
 @Injectable()
 export class PublicacionesService {
@@ -16,7 +17,7 @@ export class PublicacionesService {
     const publicaciones = await this.publicacionesProviders.findAll({
       include: [Imagen], // Incluye la relación con la tabla de imágenes
     });
-    
+
     const flatImagenes = [];
     for (const publicacion of publicaciones) {
       const { id, title, body, imagenes, createdAt, updatedAt } = publicacion;
@@ -33,7 +34,7 @@ export class PublicacionesService {
       if (imagenes) {
         const imagenesPromises = imagenes.map(async (imagen) => {
           await this.imagenesProviders.create({
-            url: imagen.filename,
+            url: `${imagen.path}`,
             publicacionId: publicacion.id,
           });
         });
