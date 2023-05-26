@@ -12,7 +12,7 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    const newUser = await this.serviceUsers.create({ createUserDto });
+    const newUser = await this.serviceUsers.create({ ...createUserDto });
     return newUser;
   }
   
