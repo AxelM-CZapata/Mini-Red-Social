@@ -3,16 +3,17 @@ import { Publicacion } from './entity/publicaciones.entity';
 import { Imagen } from './entity/imagen.entity';
 import { CreatePostDto } from './dto/create-publicacion.dto';
 import * as path from 'path';
+
 @Injectable()
 export class PublicacionesService {
   constructor(
-    @Inject('PUBLICACIONES_REPOSITORY')
+    @Inject('PUBLICACIONES_REPOSITORY')  // Inyectamos los providers de publicaciones
     private publicacionesProviders: typeof Publicacion,
-    @Inject('IMAGENES_REPOSITORY')
+    @Inject('IMAGENES_REPOSITORY')  // Inyectamos los providers de imagenes
     private imagenesProviders: typeof Imagen,
   ) { }
 
-  async findAll(): Promise<Publicacion[]> {
+  async findAll(): Promise<Publicacion[]> {  //funcion para retornar todoas las publicaciones
     const publicaciones = await this.publicacionesProviders.findAll({
       include: [Imagen], // Incluye la relación con la tabla de imágenes
     });
@@ -34,11 +35,7 @@ export class PublicacionesService {
       if (imagenes) {
         const imagenesPromises = imagenes.map(async (imagen) => {
           await this.imagenesProviders.create({
-<<<<<<< HEAD
-            url: `${imagen.destination}/${imagen.filename}`,
-=======
             url: rutaCompleta + '\\' + imagen.filename,
->>>>>>> ee1d67da31b2537fa879bb3f6bac3311a9046dcd
             publicacionId: publicacion.id,
           });
         });
