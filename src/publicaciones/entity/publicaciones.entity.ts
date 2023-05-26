@@ -1,4 +1,5 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany } from 'sequelize-typescript';
+import { Imagen } from './imagen.entity';
 
 @Table
 export class Publicacion extends Model {
@@ -11,4 +12,6 @@ export class Publicacion extends Model {
   @Column
     isActive: boolean ;
 
+  @HasMany(() => Imagen)
+    imagenes: Imagen[];
 }

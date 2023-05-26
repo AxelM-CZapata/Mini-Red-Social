@@ -1,29 +1,47 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Publicacion } from './entity/publicaciones.entity';
+import { Imagen } from './entity/imagen.entity';
 
 @Injectable()
 export class PublicacionesService {
   constructor(
     @Inject('PUBLICACIONES_REPOSITORY')
     private publicacionesProviders: typeof Publicacion,
-  ) {}
+    @Inject('IMAGENES_REPOSITORY')
+    private imagenesProviders: typeof Imagen,
+  ) { }
 
   async findAll(): Promise<Publicacion[]> {
-    return this.publicacionesProviders.findAll();
+    const publicaciones = await this.publicacionesProviders.findAll({
+      include: [Imagen], // Incluye la relación con la tabla de imágenes
+    });
+    const flatImagenes = [];
+    for (const publicacion of publicaciones) {
+      const { id, title, body, imagenes, createdAt, updatedAt } = publicacion;
+      flatImagenes.push({ id, title, body, createdAt, updatedAt, imagenes: imagenes.map((i) => i.url) });
+    }
+
+    return flatImagenes;
   }
 
-  async create( { title, body } ): Promise<string> {
-    const postData = {
-      title,
-      body,
-      isActive: true,
-    };
-
-    this.publicacionesProviders.create(postData);
+  async create(body, imagenes): Promise<string> {
+    const post = await this.publicacionesProviders.create({ ...body, isActive: true });
+    const publicacion = await this.publicacionesProviders.findByPk(post.id);
+    if (publicacion) {
+      if (imagenes) {
+        const imagenesPromises = imagenes.map(async (imagen) => {
+          await this.imagenesProviders.create({
+            url: imagen.filename,
+            publicacionId: publicacion.id,
+          });
+        });
+        await Promise.all(imagenesPromises);
+      }
+    }
     return 'Publicacion creada correctamente';
   }
 
-  async delete(id:string): Promise<string> {
+  async delete(id: string): Promise<string> {
     const publicacion = await this.publicacionesProviders.findByPk(parseInt(id));
     if (publicacion) {
       publicacion.isActive = false;
@@ -32,8 +50,8 @@ export class PublicacionesService {
     return 'Publicacion eliminada';
   }
 
-  async update(id:string, { title, body }): Promise<string> {
-    if (!body && !title ) return 'Nada que actualizar';
+  async update(id: string, { title, body }): Promise<string> {
+    if (!body && !title) return 'Nada que actualizar';
     const publicacion = await this.publicacionesProviders.findByPk(parseInt(id));
     if (publicacion) {
       if (title) publicacion.title = title;
