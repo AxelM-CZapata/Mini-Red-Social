@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { Imagen } from 'src/publicaciones/entity/imagen.entity';
 import { Publicacion } from 'src/publicaciones/entity/publicaciones.entity';
 
 export const databaseProviders = [
@@ -13,8 +14,8 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: 'miniredsocial',
       });
-      sequelize.addModels([Publicacion]);
-      await sequelize.sync({ force:true });
+      sequelize.addModels([Publicacion, Imagen]);
+      await sequelize.sync({ force: true });
       return sequelize;
     },
   },
