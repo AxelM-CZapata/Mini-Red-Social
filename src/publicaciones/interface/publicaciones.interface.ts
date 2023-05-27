@@ -1,9 +1,9 @@
-import { Imagen } from '../entity/imagen.entity';
+import { Imagenes } from '../entity/imagen.entity';
 
 export interface Publicaciones {
   id?:number;
   title:string;
   body:string;
   isActive:boolean;
-  imagenes?: Imagen[];
+  imagenes?: Imagenes[];
 }

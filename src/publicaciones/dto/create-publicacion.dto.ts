@@ -5,6 +5,8 @@ export class CreatePostDto {
 
   body: string;
 
+  userId: number;
+
   isActive?: boolean;
 
   imagenes?: string[];

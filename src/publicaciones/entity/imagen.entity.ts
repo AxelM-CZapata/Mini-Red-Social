@@ -1,15 +1,15 @@
 import { Column, ForeignKey, Model, Table, BelongsTo, DataType } from 'sequelize-typescript';
-import { Publicacion } from './publicaciones.entity';
+import { Publicaciones } from './publicaciones.entity';
 
 @Table({ timestamps: false })
-export class Imagen extends Model<Imagen> {
+export class Imagenes extends Model<Imagenes> {
   @Column
     url: string;
 
-  @ForeignKey(() => Publicacion)
+  @ForeignKey(() => Publicaciones)
   @Column
     publicacionId: number;
 
-  @BelongsTo(() => Publicacion)
-    publicacion: Publicacion;
+  @BelongsTo(() => Publicaciones)
+    publicacion: Publicaciones;
 }

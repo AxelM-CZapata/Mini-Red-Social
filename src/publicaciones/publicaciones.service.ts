@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Publicacion } from './entity/publicaciones.entity';
-import { Imagen } from './entity/imagen.entity';
+import { Publicaciones } from './entity/publicaciones.entity';
+import { Imagenes } from './entity/imagen.entity';
 import { CreatePostDto } from './dto/create-publicacion.dto';
 import * as path from 'path';
 
@@ -8,20 +8,20 @@ import * as path from 'path';
 export class PublicacionesService {
   constructor(
     @Inject('PUBLICACIONES_REPOSITORY')  // Inyectamos los providers de publicaciones
-    private publicacionesProviders: typeof Publicacion,
+    private publicacionesProviders: typeof Publicaciones,
     @Inject('IMAGENES_REPOSITORY')  // Inyectamos los providers de imagenes
-    private imagenesProviders: typeof Imagen,
+    private imagenesProviders: typeof Imagenes,
   ) { }
 
-  async findAll(): Promise<Publicacion[]> {  //funcion para retornar todoas las publicaciones
+  async findAll(): Promise<Publicaciones[]> {  //funcion para retornar todoas las publicaciones
     const publicaciones = await this.publicacionesProviders.findAll({
-      include: [Imagen], // Incluye la relación con la tabla de imágenes
+      include: [Imagenes], // Incluye la relación con la tabla de imágenes
     });
 
     const flatImagenes = [];
     for (const publicacion of publicaciones) {
-      const { id, title, body, imagenes, createdAt, updatedAt } = publicacion;
-      flatImagenes.push({ id, title, body, createdAt, updatedAt, imagenes: imagenes.map((i) => i.url) });
+      const { id, title, body, imagenes, isActive, createdAt, updatedAt } = publicacion;
+      flatImagenes.push({ id, title, body, createdAt, updatedAt, isActive, imagenes: imagenes.map((i) => i.url) });
     }
 
     return flatImagenes;
@@ -42,7 +42,7 @@ export class PublicacionesService {
         await Promise.all(imagenesPromises);
       }
     }
-    return 'Publicacion creada correctamente';
+    return 'Publicaciones creada correctamente';
   }
 
   async delete(id: string): Promise<string> {
@@ -51,7 +51,7 @@ export class PublicacionesService {
       publicacion.isActive = false;
     }
     await publicacion.save();
-    return 'Publicacion eliminada';
+    return 'Publicaciones eliminada';
   }
 
   async update(id: string, { title, body }): Promise<string> {

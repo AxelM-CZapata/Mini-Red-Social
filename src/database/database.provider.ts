@@ -1,12 +1,13 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Imagen } from 'src/publicaciones/entity/imagen.entity';
-import { Publicacion } from 'src/publicaciones/entity/publicaciones.entity';
+import { Imagenes } from 'src/publicaciones/entity/imagen.entity';
+import { Publicaciones } from 'src/publicaciones/entity/publicaciones.entity';
+import { Amigos } from 'src/users/entity/Amigos.entity';
 import { Usuarios } from 'src/users/entity/Usuarios.entity';
 
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
-    useFactory: async () => {
+    useFactory: async () => { 
       const sequelize = new Sequelize({
         dialect: 'postgres',
         host: process.env.DB_HOST,
@@ -15,7 +16,7 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: 'miniredsocial',
       });
-      sequelize.addModels([Publicacion, Imagen, Usuarios]);
+      sequelize.addModels([Publicaciones, Imagenes, Usuarios, Amigos]);
       await sequelize.sync({ force: true });
       await sequelize.sync();
       return sequelize;
