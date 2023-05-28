@@ -1,4 +1,6 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import { Table, Column, Model, BelongsToMany } from 'sequelize-typescript';
+import { Amigos } from './Amigos.entity';
+import { UsuariosAmigos } from './UsuariosAmigos.entity';
 
 @Table
 export class Usuarios extends Model {
@@ -16,5 +18,9 @@ export class Usuarios extends Model {
 
   @Column
     password: string;
+
+  @BelongsToMany(() => Usuarios, () => UsuariosAmigos, 'userId', 'friendId')
+    friends: Amigos[];
+
 
 }
