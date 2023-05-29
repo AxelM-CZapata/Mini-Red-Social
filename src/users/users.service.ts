@@ -15,7 +15,7 @@ export class UsersService {
     const newUser = await this.serviceUsers.create({ ...createUserDto });
     return newUser;
   }
-  
+
   async findAll(): Promise<Usuarios[]> {
     const api = this.configureService.get('DB_HOST');
     console.log(api);
@@ -31,4 +31,44 @@ export class UsersService {
     await usuario.destroy();
   }
 
+  async findById(id: string): Promise<Usuarios> {
+    const user = await this.serviceUsers.findByPk(parseInt(id));
+
+    console.log(user);
+    if (!user) {
+      throw new Error('No hay con ese id');
+    }
+
+    return user;
+  }
+
+  async delete(id: string): Promise<void> {
+    const user = await this.serviceUsers.findByPk(parseInt(id));
+
+    if (!user) {
+      throw new Error(`User with ID '${id}' not found`);
+    }
+
+    await this.serviceUsers.destroy({ where: { id: parseInt(id) } });
+  }
+
+  async update(
+    id: string,
+    { name, email, age, perfileImage, password },
+  ): Promise<string> {
+    if (!name && !email && !age && !perfileImage && !password)
+      return 'Nada que actualizar';
+    const user = await this.serviceUsers.findByPk(parseInt(id));
+    if (user) {
+      if (name) user.name = name;
+      if (email) user.email = email;
+      if (age) user.age = age;
+      if (perfileImage) user.perfileImage = perfileImage;
+      if (password) user.password = password;
+      await user.save();
+      return 'Actualizado';
+    } else {
+      return 'No existe la publicacion';
+    }
+  }
 }
